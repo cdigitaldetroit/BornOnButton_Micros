@@ -52,5 +52,3 @@ $taskSettings = New-ScheduledTaskSettingsSet -StartWhenAvailable
 $taskName = "Born On"
 $taskDesc = "Update the MICROS Born On Buttons"
 Register-ScheduledTask -TaskName $taskName -Action $taskAction -Settings $taskSettings -Trigger $taskTrigger -Description $taskDesc -User $env:computerName\$env:UserName -Password $winPwd
-
-
