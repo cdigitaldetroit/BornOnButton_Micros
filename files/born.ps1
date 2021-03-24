@@ -9,7 +9,7 @@ $scriptsPath = "D:\micros\res\pos\scripts"
 #Import the Micros Screen and Key Sequence Numbers from the CSV file
 $header = "sSync","kSync"
 $importCSV = @(Import-Csv $scriptsPath\BornOn\born.csv -Header $header)
-$sFile = "$boPath\bo.txt"
+$sFile = "$boPath\b1.ini"
 
 #Unencrypt the Database Password
 $sString = ConvertTo-SecureString -String (Get-Content $sFile)
