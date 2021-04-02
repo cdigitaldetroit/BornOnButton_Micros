@@ -46,9 +46,18 @@ $sString1 = ConvertTo-SecureString -String (Get-Content $sFile1)
 $bstr1 = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($sString1)
 $winPwd = [Runtime.InteropServices.Marshal]::PtrToStringAuto($bstr1)
 
-$taskAction = New-ScheduledTaskAction -Execute 'BornOn.bat' -WorkingDirectory $boPath
-$taskTrigger = New-ScheduledTaskTrigger -Daily -At 12AM
-$taskSettings = New-ScheduledTaskSettingsSet -StartWhenAvailable
-$taskName = "Born On"
-$taskDesc = "Update the MICROS Born On Buttons"
-Register-ScheduledTask -TaskName $taskName -Action $taskAction -Settings $taskSettings -Trigger $taskTrigger -Description $taskDesc -User $env:computerName\$env:UserName -Password $winPwd
+# $taskAction = New-ScheduledTaskAction -Execute 'BornOn.bat' -WorkingDirectory $boPath
+# $taskTrigger = New-ScheduledTaskTrigger -Daily -At 12AM
+# $taskSettings = New-ScheduledTaskSettingsSet -StartWhenAvailable
+# $taskName = "Born On"
+# $taskDesc = "Update the MICROS Born On Buttons"
+# Register-ScheduledTask -TaskName $taskName -Action $taskAction -Settings $taskSettings -Trigger $taskTrigger -Description $taskDesc -User $env:computerName\$env:UserName -Password $winPwd
+
+[xml]$taskXML = Get-Content .\BornOn.xml
+
+$taskXML.Task.RegistrationInfo.Author = "$env:COMPUTERNAME\$env:UserName"
+$taskXML.Task.Principals.Principal.UserId = "$env:COMPUTERNAME\$env:UserName"
+$taskXML.Task.Actions.Exec.Arguments = "$boPath"
+$taskXML.Save(".\BornOn.xml")
+
+schtasks /create /tn "Born On" /xml ".\BornOn.xml" /rp $winPwd
