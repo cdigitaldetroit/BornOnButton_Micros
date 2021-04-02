@@ -48,8 +48,7 @@ $winPwd = [Runtime.InteropServices.Marshal]::PtrToStringAuto($bstr1)
 
 [xml]$taskXML = Get-Content .\BornOn.xml
 
-
-$taskXML.Task.Actions.Exec.WorkingDirectory = "$boTemp"
+$taskXML.Task.Actions.Exec.Arguments = "-executionpolicy unrestricted -File $boPath\born.ps1"
 $taskXML.Save(".\BornOn.xml")
 
 schtasks /create /tn "Born On" /xml ".\BornOn.xml" /ru $env:COMPUTERNAME\$env:UserName /rp $winPwd
