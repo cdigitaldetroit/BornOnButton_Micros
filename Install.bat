@@ -1,2 +1,3 @@
 @Echo Off
-powershell.exe -executionpolicy unrestricted .\files\install.ps1
+PowerShell.exe -ExecutionPolicy unrestricted %cd%\files\install.ps1
+pause

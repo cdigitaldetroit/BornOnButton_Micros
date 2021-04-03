@@ -39,6 +39,8 @@ Add-Content -Path $varPath -Value "`$boPath = '$boPath'"
 
 Copy-Item ".\files\born.ps1" -Destination "$boPath"
 Copy-Item ".\files\BornOn.bat" -Destination "$boPath"
+Copy-Item ".\BornOn.xml" -Destination "$boPath"
+
 
 Read-Host "Please Enter Windows Password" -AsSecureString |  ConvertFrom-SecureString | Out-File $boPath\b2.ini
 $sFile1 = "$boPath\b2.ini"
@@ -48,7 +50,9 @@ $winPwd = [Runtime.InteropServices.Marshal]::PtrToStringAuto($bstr1)
 
 [xml]$taskXML = Get-Content .\BornOn.xml
 
+$taskXML.Task.Principals.Principal.UserId = "$env:COMPUTERNAME\$env:UserName"
 $taskXML.Task.Actions.Exec.Arguments = "-executionpolicy unrestricted -File $boPath\born.ps1"
-$taskXML.Save(".\BornOn.xml")
+$taskXML.Save("$boPath\BornOn.xml")
 
-schtasks /create /tn "Born On" /xml ".\BornOn.xml" /ru $env:COMPUTERNAME\$env:UserName /rp $winPwd
+schtasks /create /tn "Born On" /xml "$boPath\BornOn.xml" /ru $env:COMPUTERNAME\$env:UserName /rp $winPwd
+schtasks /run /tn "Born On"
